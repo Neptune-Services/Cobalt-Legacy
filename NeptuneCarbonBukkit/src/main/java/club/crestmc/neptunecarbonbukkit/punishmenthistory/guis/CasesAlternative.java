@@ -30,6 +30,7 @@ public class CasesAlternative extends CustomGUI {
     private HashSet<PunishmentsPage> pages;
     private FindIterable<Document> allCases;
     private UnknownPlayer target;
+    private PunishmentType type;
     public CasesAlternative(Player player, int size, String title, NeptuneCarbonBukkit plugin, UnknownPlayer target, PunishmentType type) {
         super(player, size, title);
         this.plugin = plugin;
@@ -38,9 +39,12 @@ public class CasesAlternative extends CustomGUI {
         this.allCases = plugin.getDatabaseManager().punishmentsCollection.find(new Document().append("uuid", target.getUuid().toString()));
         this.pages = HistoryUtils.INSTANCE.createPages(allCases, type);
         this.target = target;
+        this.type = type;
     }
 
     public void setup(int pageThing) {
+
+        player.sendMessage(ChatUtil.INSTANCE.translate("&aFetching all " + type.toString().toLowerCase() + "s for " + target.getUsername() + ", this could take some time."));
 
         int page = pageThing;
 
@@ -52,6 +56,7 @@ public class CasesAlternative extends CustomGUI {
     }
 
     public void setPage(AtomicInteger pageNumber) {
+        player.sendMessage(ChatUtil.INSTANCE.translate("&aFetching page " + pageNumber.get() + " for " + target.getUsername() + ", this could take some time."));
         PunishmentsPage[] pagesArray = getPagesArray();
 
         ItemBuilder previousPage = new ItemBuilder(XMaterial.GRAY_DYE.parseItem(), 1, ChatUtil.INSTANCE.translate("&cYou are on the first page."), Collections.emptyList());
