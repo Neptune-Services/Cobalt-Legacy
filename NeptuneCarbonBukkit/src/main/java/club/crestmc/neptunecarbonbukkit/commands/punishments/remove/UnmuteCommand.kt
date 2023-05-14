@@ -55,7 +55,7 @@ class UnmuteCommand : BaseCommand() {
         val addedReason = existsCheck.first().getString("reason")
 
         val msg = ChatUtil.translate(
-            (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "&aYou have unmuted ${ColorUtil().getColoredName(target.uuid)} &afor &f${reason}&a."
+            (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "&aYou have unmuted ${ColorUtil().getColor(target.uuid) + target.username!!} &afor &f${reason}&a."
         )
         val senderName: String
         if (sender.isPlayer) {
@@ -90,7 +90,7 @@ class UnmuteCommand : BaseCommand() {
         sender.sendMessage(msg)
         val broadcastMsg = TextComponent(
             ChatUtil.translate(
-                (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "$senderName &ahas unmuted ${ColorUtil().getColoredName(target.uuid)}&a."
+                (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "$senderName &ahas unmuted ${ColorUtil().getColor(target.uuid) + target.username!!}&a."
             )
         )
         for (p in Bukkit.getOnlinePlayers()) {

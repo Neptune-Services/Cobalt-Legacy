@@ -32,7 +32,7 @@ public class CasesAlternative extends CustomGUI {
     private UnknownPlayer target;
     private PunishmentType type;
     public CasesAlternative(Player player, int size, String title, NeptuneCarbonBukkit plugin, UnknownPlayer target, PunishmentType type) {
-        super(player, size, title);
+        super(player, size, ChatUtil.INSTANCE.translate(target.getUsername() + "'s " + type.toString().toLowerCase() + "s"));
         this.plugin = plugin;
         newPage = new AtomicInteger(1);
 
@@ -96,9 +96,8 @@ public class CasesAlternative extends CustomGUI {
 
         gui.setButton(8, new Button(nextPage.getItem(), nextPageRunnable, nextPage.getName()));
 
-        System.out.println("PAGES" + pages);
-        System.out.println("PAGES ARRAY" + pagesArray);
-        System.out.println(pageNumber);
+        ItemBuilder pageButton = new ItemBuilder(XMaterial.BOOK.parseItem(), 1, ChatUtil.INSTANCE.translate("&7You are on page " + newPage.get() + " of " + pagesArray.length), Collections.emptyList());
+        gui.setButton(4, new Button(pageButton.getItem(), pageButton.getName()));
 
         PunishmentsPage page = pagesArray[pageNumber.get() - 1];
 

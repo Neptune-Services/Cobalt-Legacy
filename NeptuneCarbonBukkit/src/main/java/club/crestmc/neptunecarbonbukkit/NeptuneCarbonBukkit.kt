@@ -9,6 +9,7 @@ import club.crestmc.neptunecarbonbukkit.commands.punishments.remove.UnbanCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.remove.UnmuteCommand
 import club.crestmc.neptunecarbonbukkit.commands.ranks.ListCommand
 import club.crestmc.neptunecarbonbukkit.commands.ranks.RankManager
+import club.crestmc.neptunecarbonbukkit.commands.users.AltsCommand
 import club.crestmc.neptunecarbonbukkit.config.ConfigManager
 import club.crestmc.neptunecarbonbukkit.database.DatabaseManager
 import club.crestmc.neptunecarbonbukkit.listeners.*
@@ -141,6 +142,7 @@ class NeptuneCarbonBukkit : JavaPlugin() {
         manager.registerCommand(HistCommand())
         manager.registerCommand(MuteCommand())
         manager.registerCommand(UnmuteCommand())
+        manager.registerCommand(AltsCommand())
 
         return;
     }

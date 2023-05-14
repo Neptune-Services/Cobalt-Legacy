@@ -4,6 +4,7 @@ import club.crestmc.neptunecarbonbukkit.Constants
 import club.crestmc.neptunecarbonbukkit.NeptuneCarbonBukkit
 import club.crestmc.neptunecarbonbukkit.utils.ChatUtil
 import club.crestmc.neptunecarbonbukkit.utils.ChatUtil.translate
+import club.crestmc.neptunecarbonbukkit.utils.ColorUtil
 import club.crestmc.neptunecarbonbukkit.utils.PluginMessageUtil.sendData
 import club.crestmc.neptunecarbonbukkit.utils.UUIDUtil
 import club.crestmc.neptunecarbonbukkit.utils.UUIDUtil.getUnknownPlayerDatabaseFromUsername
@@ -51,7 +52,7 @@ class KickCommand : BaseCommand() {
         }
         var msg = translate(
             (if (silent) ChatUtil.getLanguageTranslation("kick.silent") else "") + ChatUtil.getLanguageTranslation("kick.youKicked")
-                .replace("%target%", target.username!!)
+                .replace("%target%", ColorUtil().getColor(target.uuid) + target.username!!)
                 .replace("%reason%", reason)
         )
         msg = if (silent) {
@@ -92,7 +93,7 @@ class KickCommand : BaseCommand() {
         val broadcastMsg = TextComponent(
             translate(
                 (if (silent) ChatUtil.getLanguageTranslation("kick.silent") else "") + ChatUtil.getLanguageTranslation("kick.announcement")
-                    .replace("%target%", target.username!!)
+                    .replace("%target%", ColorUtil().getColor(target.uuid) + target.username!!)
                     .replace("%player%", senderName)
                     .replace("%reason%", reason)
             )

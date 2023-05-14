@@ -18,7 +18,7 @@ class ColorUtil {
 
     fun getColoredNameFromUuid(uuid: UUID): String {
         val player: OfflinePlayer = plugin.server.getOfflinePlayer(uuid)
-        val toReturn: String = getColoredName(uuid) ?: ("[UNKNOWN] " + UUIDUtil.getName(uuid))
+        val toReturn: String = getColoredName(uuid) ?: ("[UNKNOWN] " + UUIDUtil.getUnknownPlayerDatabaseFromUuid(uuid.toString())?.username)
 
         return ChatUtil.translate(toReturn)
     }
@@ -37,7 +37,7 @@ class ColorUtil {
         return if (Bukkit.getPlayer(uuid!!) != null) {
             getColor(uuid) + Bukkit.getPlayer(uuid)!!.name
         } else {
-            getColor(uuid) + getName(uuid)
+            getColor(uuid) + UUIDUtil.getUnknownPlayerDatabaseFromUuid(uuid.toString())?.username
         }
     }
 

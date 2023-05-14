@@ -19,7 +19,7 @@ class UserManager(val plugin: NeptuneCarbonBungee) {
         )
     }
 
-    fun updateUser(player: ProxiedPlayer, data: Document, addJoin: Boolean) {
+    fun updateUser(player: ProxiedPlayer, data: Document, addJoin: Boolean, addLeave: Boolean) {
         if(player.name != data.getString("username")) {
             plugin.databaseManager.usersCollection.updateOne(eq("uuid", player.uniqueId.toString()), Updates.combine(
                 Updates.set("username", player.name)
@@ -36,7 +36,14 @@ class UserManager(val plugin: NeptuneCarbonBungee) {
 
         if(addJoin) {
             plugin.databaseManager.usersCollection.updateOne(eq("uuid", player.uniqueId.toString()), Updates.combine(
-                Updates.set("joins", data.getInteger("joins") + 1)
+                Updates.set("joins", data.getInteger("joins") + 1),
+                Updates.set("lastIp", (player.socketAddress as InetSocketAddress).hostName)
+            ))
+        }
+
+        if(addLeave) {
+            plugin.databaseManager.usersCollection.updateOne(eq("uuid", player.uniqueId.toString()), Updates.combine(
+                Updates.set("lastLogoff", Date.from(Instant.now()))
             ))
         }
     }

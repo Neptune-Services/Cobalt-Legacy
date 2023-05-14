@@ -55,7 +55,7 @@ class MuteCommand : BaseCommand() {
         }
 
         val msg = ChatUtil.translate(
-            (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "&aYou have permanently muted ${ColorUtil().getColoredName(target.uuid)} &afor &f${reason}&a."
+            (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "&aYou have permanently muted ${ColorUtil().getColor(target.uuid) + target.username!!} &afor &f${reason}&a."
         )
 
         val senderName: String
@@ -89,7 +89,7 @@ class MuteCommand : BaseCommand() {
         sender.sendMessage(msg)
         val broadcastMsg = TextComponent(
             ChatUtil.translate(
-                (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "$senderName &ahas permanently muted ${ColorUtil().getColoredName(target.uuid)}&a."
+                (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "$senderName &ahas permanently muted ${ColorUtil().getColor(target.uuid) + target.username!!}&a."
             )
         )
         for (p in Bukkit.getOnlinePlayers()) {

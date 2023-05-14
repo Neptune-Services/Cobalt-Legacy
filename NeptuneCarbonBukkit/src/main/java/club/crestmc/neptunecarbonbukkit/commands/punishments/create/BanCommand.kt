@@ -54,7 +54,7 @@ class BanCommand : BaseCommand() {
 
         var msg = ChatUtil.translate(
             (if (silent) ChatUtil.getLanguageTranslation("ban.permanent.silent") else "") + ChatUtil.getLanguageTranslation("ban.permanent.youBanned")
-                .replace("%target%", ColorUtil().getColor(target.uuid) + target.username)
+                .replace("%target%", ColorUtil().getColor(target.uuid) + target.username!!)
                 .replace("%reason%", reason)
         )
         msg = if (silent) {
