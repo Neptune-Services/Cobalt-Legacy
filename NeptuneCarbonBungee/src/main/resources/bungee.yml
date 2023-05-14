@@ -1,0 +1,4 @@
+name: NeptuneCarbonBungee
+version: '1.0.0'
+main: club.crestmc.neptunecarbonbungee.NeptuneCarbonBungee
+author: HyperfireRS

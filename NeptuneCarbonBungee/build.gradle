@@ -1,0 +1,50 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.8.20"
+    id "maven-publish"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+group "club.crestmc"
+version "1.0.0"
+
+repositories {
+    mavenCentral()
+    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+    maven {
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://oss.sonatype.org/content/repositories/central" }
+    maven { url 'https://repo.demeng.dev/releases' }
+}
+
+dependencies {
+    compileOnly "net.md-5:bungeecord-api:1.16-R0.4"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20"
+
+    // oh you're a stupid one aren't you. yes hang on nvm we good
+    implementation "co.aikar:acf-bungee:0.5.1-SNAPSHOT"
+    implementation 'org.mongodb:mongodb-driver-sync:4.9.1'
+    implementation "dev.demeng:sentinel-java-wrapper:1.0.4"
+}
+
+compileKotlin {
+    kotlinOptions.javaParameters = true
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+shadowJar {
+    archiveClassifier.set("")
+    archiveFileName = "NeptuneCarbonBungee.jar"
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
+
+tasks.build.dependsOn(shadowJar)

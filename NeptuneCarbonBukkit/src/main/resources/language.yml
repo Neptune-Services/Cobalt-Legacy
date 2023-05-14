@@ -1,0 +1,85 @@
+# ===================================================================================================
+#                                           Neptune Carbon
+#
+#                                        Do not redistribute.
+# ===================================================================================================
+consoleName: '&c&lConsole'
+
+ranks:
+  errors:
+    group_not_found: '&cError: The specified group could not be found.'
+  given:
+    parent: '&aYour rank has been set to &2%rank%&a.'
+    sub: '&aYou have been given a sub-rank of &2%rank%&a.'
+  success_set: '&aYou''ve set &2%player%&a''s rank to &2%rank%&a.'
+
+hover:
+  added: |-
+    &7&m---------------------------
+    &7Added By: &d%player%
+    &7Added Reason: &d%reason%
+    &7&m---------------------------
+  removed: |-
+    &7&m---------------------------
+    &3Added Reason: &7%added_reason%
+    &3Removed Reason: &7%removed_reason%
+    &7&m---------------------------
+
+ban:
+  already_banned: '&cThat player already has an active ban.'
+  permanent:
+    kick: |-
+      &7
+      &c&lYour account has been permanently suspended from the Crest Network.
+      
+      &cReason: &7%reason%
+      &cYou are unable to appeal this punishment.
+      &7 &f
+    silent: '&7(Silent) '
+    hover: |-
+      &7&m---------------------------
+      &3Added By: &b%player%
+      &3Added Reason: &7%reason%
+      &7&m---------------------------
+    youBanned: '&aYou''ve permanently banned &2%target%&a for &2%reason%&a.'
+    announcement: '&2%player%&a has permanently banned &2%target%&a.'
+unban:
+  not_banned: '&cThat player is not banned.'
+  silent: '&7(Silent) '
+  hover: |-
+    &7&m---------------------------
+    &3Added Reason: &7%added_reason%
+    &3Removed Reason: &7%removed_reason%
+    &7&m---------------------------
+  youUnbanned: '&aYou''ve unbanned &2%target%&a for &2%reason%&a.'
+  announcement: '&2%player%&a has unbanned &2%target%&a.'
+mute:
+  already_banned: '&cThat player already has an active ban.'
+  permanent:
+    silent: '&7(Silent) '
+    hover: |-
+      &7&m---------------------------
+      &3Added By: &b%player%
+      &3Added Reason: &7%reason%
+      &7&m---------------------------
+    youMuted: '&aYou''ve permanently muted &2%target%&a for &2%reason%&a.'
+    announcement: '&2%player%&a has permanently muted &2%target%&a.'
+unmute:
+  not_muted: '&cThat player is not banned.'
+  silent: '&7(Silent) '
+  hover: |-
+    &7&m---------------------------
+    &3Added Reason: &7%added_reason%
+    &3Removed Reason: &7%removed_reason%
+    &7&m---------------------------
+  youUnmuted: '&aYou''ve unmuted &2%target%&a for &2%reason%&a.'
+  announcement: '&2%player%&a has unmuted &2%target%&a.'
+kick:
+  silent: '&7(Silent) '
+  hover: |-
+    &7&m---------------------------
+    &3Added By: &b%player%
+    &3Added Reason: &7%reason%
+    &7&m---------------------------
+  youKicked: '&aYou''ve kicked &2%target%&a for &2%reason%&a.'
+  announcement: '&2%player%&a has kicked &2%target%&a.'

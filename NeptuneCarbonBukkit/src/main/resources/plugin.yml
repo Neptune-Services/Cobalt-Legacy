@@ -1,0 +1,11 @@
+name: NeptuneCarbonBukkit
+version: '${version}'
+main: club.crestmc.neptunecarbonbukkit.NeptuneCarbonBukkit
+api-version: 1.16
+prefix: CarbonBukkit
+load: STARTUP
+authors: [ HyperfireRS ]
+description: Bukkit-side plugin for Neptune's Carbon.
+depend:
+  - LuckPerms
+  - PlaceholderAPI
