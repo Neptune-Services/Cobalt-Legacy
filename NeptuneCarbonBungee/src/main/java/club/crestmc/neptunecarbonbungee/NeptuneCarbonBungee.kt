@@ -5,6 +5,7 @@ import club.crestmc.neptunecarbonbungee.commands.ServerInfoCommand
 import club.crestmc.neptunecarbonbungee.config.ConfigManager
 import club.crestmc.neptunecarbonbungee.database.DatabaseManager
 import club.crestmc.neptunecarbonbungee.listeners.BanListeners
+import club.crestmc.neptunecarbonbungee.listeners.BlacklistListeners
 import club.crestmc.neptunecarbonbungee.listeners.PingListener
 import club.crestmc.neptunecarbonbungee.listeners.UsersListeners
 import club.crestmc.neptunecarbonbungee.utils.ChatUtil
@@ -32,6 +33,7 @@ class NeptuneCarbonBungee: Plugin() {
     var databaseManager = DatabaseManager(this)
 
     lateinit var bannedPlayers: MutableSet<UUID>
+    lateinit var blacklistedPlayers: MutableSet<UUID>
 
     fun getPlugin(): Plugin {
         return this
@@ -44,6 +46,7 @@ class NeptuneCarbonBungee: Plugin() {
         databaseManager.serverStatusCollection.drop()
 
         bannedPlayers = HashSet<UUID>()
+        blacklistedPlayers = HashSet<UUID>()
 
         proxy.scheduler.schedule(this, Runnable {
             proxy.logger.info(ChatUtil.translate("&eSuccessfully loaded &dCarbon Bungee &elicensed under &d" + Constants.serverName + "&e. If this plugin is being used on a server that is not &d" + Constants.serverName + "&e, please contact &d" + Constants.instanceSupervisor + " &eimmediately."))
@@ -52,6 +55,7 @@ class NeptuneCarbonBungee: Plugin() {
         proxy.pluginManager.registerListener(this, BanListeners(this))
         proxy.pluginManager.registerListener(this, UsersListeners(this))
         proxy.pluginManager.registerListener(this, PingListener(this))
+        proxy.pluginManager.registerListener(this, BlacklistListeners(this))
     }
 
     override fun onDisable() {

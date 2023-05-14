@@ -2,6 +2,7 @@ package club.crestmc.neptunecarbonbukkit
 
 import club.crestmc.neptunecarbonbukkit.commands.CarbonBukkitCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.create.BanCommand
+import club.crestmc.neptunecarbonbukkit.commands.punishments.create.BlacklistCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.create.KickCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.create.MuteCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.info.HistCommand
@@ -143,6 +144,7 @@ class NeptuneCarbonBukkit : JavaPlugin() {
         manager.registerCommand(MuteCommand())
         manager.registerCommand(UnmuteCommand())
         manager.registerCommand(AltsCommand())
+        manager.registerCommand(BlacklistCommand())
 
         return;
     }
