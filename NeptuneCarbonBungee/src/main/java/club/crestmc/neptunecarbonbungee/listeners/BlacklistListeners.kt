@@ -27,9 +27,6 @@ class BlacklistListeners(val plugin: NeptuneCarbonBungee) : Listener {
             eq("active", true)
         ))
 
-        System.out.println(docCheck)
-        System.out.println(docCheck.first().getString("uuid") == e.player.uniqueId.toString())
-
         if(docCheck.first() != null) {
             if(docCheck.first().getDate("expires") == null) {
                 plugin.proxy.scheduler.schedule(plugin, {
@@ -37,8 +34,8 @@ class BlacklistListeners(val plugin: NeptuneCarbonBungee) : Listener {
                         
                             docCheck.first().getString("reason")!!, 
                         
-                            if(docCheck.first().getString("uuid") == e.player.uniqueId.toString()) null
-                            else plugin.databaseManager.usersCollection.find(eq("uuid", docCheck.first().getString("uuid"))).first().getString("name")
+                            if(docCheck.first().getString("uuid") != e.player.uniqueId.toString()) plugin.databaseManager.usersCollection.find(eq("uuid", docCheck.first().getString("uuid"))).first().getString("username")
+                            else null
                         
                         )}\n${ChatUtil.translate("&f &f")}")
                 }, 2, TimeUnit.SECONDS)

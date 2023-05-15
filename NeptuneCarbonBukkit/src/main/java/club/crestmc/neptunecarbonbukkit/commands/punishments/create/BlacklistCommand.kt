@@ -68,10 +68,15 @@ class BlacklistCommand : BaseCommand() {
         } else {
             "console"
         }
+        PluginMessageUtil.sendData(
+            "BungeeCord", "KickPlayer", targetArg, ChatUtil.translate(
+                Constants.getPermBlacklistMsg(reason, null)
+            )
+        )
         for(alt: UnknownPlayer in PlayerUtils(plugin).getAlts(target)) {
             PluginMessageUtil.sendData(
                 "BungeeCord", "KickPlayer", alt.username, ChatUtil.translate(
-                    Constants.getPermBlacklistMsg(reason, null)
+                    Constants.getPermBlacklistMsg(reason, target.username)
                 )
             )
         }

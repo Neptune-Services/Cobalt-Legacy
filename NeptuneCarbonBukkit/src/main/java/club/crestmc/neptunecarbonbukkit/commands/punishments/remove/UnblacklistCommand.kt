@@ -1,6 +1,5 @@
-package club.crestmc.neptunecarbonbukkit.commands.punishments.create
+package club.crestmc.neptunecarbonbukkit.commands.punishments.remove
 
-import club.crestmc.neptunecarbonbukkit.Constants
 import club.crestmc.neptunecarbonbukkit.NeptuneCarbonBukkit
 import club.crestmc.neptunecarbonbukkit.utils.*
 import co.aikar.commands.BaseCommand
@@ -10,6 +9,7 @@ import co.aikar.commands.MessageType
 import co.aikar.commands.annotation.*
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Updates
 import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
@@ -18,19 +18,17 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.time.Instant
 import java.util.*
-
-@CommandAlias("ban|b")
-@Description("Ban a player from the network.")
-class BanCommand : BaseCommand() {
+@CommandAlias("unblacklist|ubl")
+@Description("Unblacklist a player from the network.")
+@CommandPermission("neptunecarbon.unblacklist")
+class UnblacklistCommand : BaseCommand() {
     @Dependency
     lateinit var plugin: NeptuneCarbonBukkit
 
-    @CommandAlias("ban|b")
-    @Description("Ban a player from the network.")
-    @CommandPermission("neptunecarbon.ban")
     @Syntax("<target> [-s] <reason> [-s]")
     @CommandCompletion("@allOnline")
-    fun onBanRun(sender: CommandIssuer, @Name("target") targetArg: String?, @Name("reason") reason: String) {
+    @Default
+    fun onUnbanRun(sender: CommandIssuer, @Name("target") targetArg: String?, @Name("reason") reason: String) {
         var reason = reason
         var silent = false
         if (reason.contains("-s")) {
@@ -46,22 +44,17 @@ class BanCommand : BaseCommand() {
             return
         }
 
-        val existsCheck = plugin.databaseManager.punishmentsCollection.find(and(eq("uuid", target.uuid.toString()), eq("active", true), eq("type", "ban")))
-        if(existsCheck.first() != null) {
-            sender.sendMessage(ChatUtil.translate("&cThat player is already blacklisted."))
+        val existsCheck = plugin.databaseManager.punishmentsCollection.find(and(eq("uuid", target.uuid.toString()), eq("active", true), eq("type", "blacklist")))
+        if (existsCheck.first() == null) {
+            sender.sendMessage(ChatUtil.translate("&cThat player is not blacklisted."))
             return
         }
 
-        var msg = ChatUtil.translate(
-            (if (silent) ChatUtil.getLanguageTranslation("ban.permanent.silent") else "") + ChatUtil.getLanguageTranslation("ban.permanent.youBanned")
-                .replace("%target%", ColorUtil().getColor(target.uuid) + target.username!!)
-                .replace("%reason%", reason)
+        val addedReason = existsCheck.first().getString("reason")
+
+        val msg = ChatUtil.translate(
+            (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "&aYou have unblacklisted ${ColorUtil().getColor(target.uuid) + target.username!!} &afor &f${reason}&a."
         )
-        msg = if (silent) {
-            msg.replace("%silent%", ChatUtil.getLanguageTranslation("ban.permanent.silent"))
-        } else {
-            msg.replace("%silent%", "")
-        }
         val senderName: String
         if (sender.isPlayer) {
             senderName = ColorUtil().getColor(sender.uniqueId) + plugin.server.getPlayer(sender.uniqueId)!!.name
@@ -74,29 +67,28 @@ class BanCommand : BaseCommand() {
         } else {
             "console"
         }
-        PluginMessageUtil.sendData(
-            "BungeeCord", "KickPlayer", target.username, ChatUtil.translate(
-                Constants.getPermBanMsg(reason)
-            )
+
+        //plugin.getDatabaseManager().punishments.insertOne(toSave);
+
+        //Document toUpdate = new Document("$set", new Document("active", false)).append("$set", new Document("status", "revoked"));
+
+        //plugin.getDatabaseManager().punishments.insertOne(toSave);
+
+        //Document toUpdate = new Document("$set", new Document("active", false)).append("$set", new Document("status", "revoked"));
+        val update = Updates.combine(
+            Updates.set("active", false),
+            Updates.set("status", "revoked"),
+            Updates.set("revokedBy", modUuid),
+            Updates.set("revokedDate", Date.from(Instant.now())),
+            Updates.set("revokedReason", reason),
+            Updates.set("revokedServer", plugin.configManager.config?.getString("serverName"))
         )
-        val toSave = Document()
-            .append("uuid", target.uuid.toString())
-        toSave.append("moderatorUuid", modUuid)
-        toSave.append("type", "ban")
-        toSave.append("date", Date.from(Instant.now()))
-        toSave.append("punishmentId", "" + Util().pID)
-        toSave.append("active", true)
-        toSave.append("status", "active")
-        toSave.append("reason", reason)
-        toSave.append("server", plugin.configManager.config?.getString("serverName"))
-        plugin.databaseManager.punishmentsCollection.insertOne(toSave)
+        plugin.databaseManager.punishmentsCollection.updateOne(existsCheck.first().toBsonDocument(), update)
+
         sender.sendMessage(msg)
         val broadcastMsg = TextComponent(
             ChatUtil.translate(
-                (if (silent) ChatUtil.getLanguageTranslation("ban.permanent.silent") else "") + ChatUtil.getLanguageTranslation("ban.permanent.announcement")
-                    .replace("%target%", ColorUtil().getColor(target.uuid) + target.username!!)
-                    .replace("%player%", senderName)
-                    .replace("%reason%", reason)
+                (if (silent) ChatUtil.translate("&7(Silent) ") else "") + "$senderName &ahas unblacklisted ${ColorUtil().getColor(target.uuid) + target.username!!}&a."
             )
         )
         for (p in Bukkit.getOnlinePlayers()) {
@@ -104,9 +96,10 @@ class BanCommand : BaseCommand() {
                 val hoverEvent = HoverEvent(
                     HoverEvent.Action.SHOW_TEXT, ComponentBuilder(
                         ChatUtil.translate(
-                            ChatUtil.getLanguageTranslation("ban.permanent.hover")
+                            ChatUtil.getLanguageTranslation("hover.removed")
                                 .replace("%player%", senderName)
-                                .replace("%reason%", reason)
+                                .replace("%removed_reason%", reason)
+                                .replace("%added_reason%", addedReason)
                         )
                     ).create()
                 )

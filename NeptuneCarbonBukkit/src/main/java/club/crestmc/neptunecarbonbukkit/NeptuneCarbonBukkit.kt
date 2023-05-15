@@ -7,6 +7,7 @@ import club.crestmc.neptunecarbonbukkit.commands.punishments.create.KickCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.create.MuteCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.info.HistCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.remove.UnbanCommand
+import club.crestmc.neptunecarbonbukkit.commands.punishments.remove.UnblacklistCommand
 import club.crestmc.neptunecarbonbukkit.commands.punishments.remove.UnmuteCommand
 import club.crestmc.neptunecarbonbukkit.commands.ranks.ListCommand
 import club.crestmc.neptunecarbonbukkit.commands.ranks.RankManager
@@ -28,6 +29,7 @@ import dev.demeng.sentinel.wrapper.exception.InvalidLicenseException
 import dev.demeng.sentinel.wrapper.exception.InvalidPlatformException
 import dev.demeng.sentinel.wrapper.exception.InvalidProductException
 import dev.demeng.sentinel.wrapper.exception.unchecked.UnauthorizedException
+import me.clip.placeholderapi.PlaceholderAPI
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.LuckPermsProvider
 import org.bson.Document
@@ -69,6 +71,13 @@ class NeptuneCarbonBukkit : JavaPlugin() {
         server.pluginManager.registerEvents(MuteListener(this), this)
         server.pluginManager.registerEvents(ChatFormatter(this), this)
         logger.info("Loaded mute chat and chat formatter hook.")
+
+        if(server.pluginManager.isPluginEnabled("PlaceholderAPI")) {
+            PAPIExpansion(this).register()
+            logger.info("Registered PlaceholderAPI expansion.")
+        } else {
+            logger.info("Could not find PlaceholderAPI, skipping registering expansion.")
+        }
 
         server.pluginManager.registerEvents(UpdateServerListeners(this), this)
         server.pluginManager.registerEvents(LuckpermsHider(this), this)
@@ -145,6 +154,7 @@ class NeptuneCarbonBukkit : JavaPlugin() {
         manager.registerCommand(UnmuteCommand())
         manager.registerCommand(AltsCommand())
         manager.registerCommand(BlacklistCommand())
+        manager.registerCommand(UnblacklistCommand())
 
         return;
     }

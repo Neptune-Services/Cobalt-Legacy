@@ -21,15 +21,14 @@ import java.util.*
 
 @CommandAlias("unban|ub")
 @Description("Unban a player from the network.")
+@CommandPermission("neptunecarbon.unban")
 class UnbanCommand : BaseCommand() {
     @Dependency
     lateinit var plugin: NeptuneCarbonBukkit
 
-    @CommandAlias("unban|ub")
-    @Description("Unban a player from the network.")
-    @CommandPermission("neptunecarbon.unban")
     @Syntax("<target> [-s] <reason> [-s]")
     @CommandCompletion("@allOnline")
+    @Default
     fun onUnbanRun(sender: CommandIssuer, @Name("target") targetArg: String?, @Name("reason") reason: String) {
         var reason = reason
         var silent = false

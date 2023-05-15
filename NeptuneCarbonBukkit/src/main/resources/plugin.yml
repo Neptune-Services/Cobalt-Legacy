@@ -8,4 +8,5 @@ authors: [ HyperfireRS ]
 description: Bukkit-side plugin for Neptune's Carbon.
 depend:
   - LuckPerms
+softdepend:
   - PlaceholderAPI
