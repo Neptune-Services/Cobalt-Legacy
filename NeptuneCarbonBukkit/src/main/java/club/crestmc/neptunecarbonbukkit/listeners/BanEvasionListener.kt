@@ -8,6 +8,7 @@ import club.crestmc.neptunecarbonbukkit.utils.PluginMessageUtil
 import club.crestmc.neptunecarbonbukkit.utils.UUIDUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent
 import org.bukkit.event.player.PlayerLoginEvent
 
 class BanEvasionListener(val plugin: NeptuneCarbonBukkit) : Listener {
@@ -19,11 +20,13 @@ class BanEvasionListener(val plugin: NeptuneCarbonBukkit) : Listener {
 
         plugin.logger.info("yeah ban evasion checking")
         if(banEvasion != null) {
-            plugin.logger.info("HOLY SHIT BAN EVADING OMG OMG BAN EVADING OF $banEvasion")
-            plugin.server.scheduler.scheduleSyncDelayedTask(plugin, Runnable {
-                plugin.server.dispatchCommand(plugin.server.consoleSender, "blacklist $banEvasion -s Ban Evasion (${e.player.name})")
-                e.player.kickPlayer(ChatUtil.translate("&cYour user profile has been updated."))
-            }, 10)
+            if(!banEvasion!!.trim().equals(e.player.name, ignoreCase = true)) {
+                plugin.logger.info("HOLY SHIT BAN EVADING OMG OMG BAN EVADING OF $banEvasion")
+                plugin.server.scheduler.scheduleSyncDelayedTask(plugin, Runnable {
+                    plugin.server.dispatchCommand(plugin.server.consoleSender, "blacklist $banEvasion -s Ban Evasion (${e.player.name})")
+                    e.player.kickPlayer(ChatUtil.translate("&cYour user profile has been updated."))
+                }, 10)
+            }
         }
     }
 }
