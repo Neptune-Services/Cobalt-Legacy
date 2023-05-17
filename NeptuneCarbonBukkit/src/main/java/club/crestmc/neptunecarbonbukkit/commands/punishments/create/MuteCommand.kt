@@ -2,6 +2,7 @@ package club.crestmc.neptunecarbonbukkit.commands.punishments.create
 
 import club.crestmc.neptunecarbonbukkit.Constants
 import club.crestmc.neptunecarbonbukkit.NeptuneCarbonBukkit
+import club.crestmc.neptunecarbonbukkit.PunishmentMessages
 import club.crestmc.neptunecarbonbukkit.utils.*
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.CommandIssuer
@@ -72,7 +73,7 @@ class MuteCommand : BaseCommand() {
         }
 
         if(targetPlayer != null && targetPlayer.isOnline) {
-            targetPlayer.sendMessage(ChatUtil.translate(Constants.getPermMuteMsg(reason)))
+            targetPlayer.sendMessage(ChatUtil.translate(PunishmentMessages(plugin).getPermMuteMsg(reason)))
         }
 
         val toSave = Document()

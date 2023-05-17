@@ -2,6 +2,7 @@ package club.crestmc.neptunecarbonbungee.listeners
 
 import club.crestmc.neptunecarbonbungee.Constants
 import club.crestmc.neptunecarbonbungee.NeptuneCarbonBungee
+import club.crestmc.neptunecarbonbungee.PunishmentMessages
 import club.crestmc.neptunecarbonbungee.utils.ChatUtil
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
@@ -24,8 +25,12 @@ class BanListeners(val plugin: NeptuneCarbonBungee) : Listener {
         if(docCheck.first() != null) {
             if(docCheck.first().getDate("expires") == null) {
                 plugin.proxy.scheduler.schedule(plugin, {
-                    e.player.sendMessage("\n${Constants.getPermBanMsg(docCheck.first().getString("reason")!!)}\n${ChatUtil.translate("&f &f")}")
-                }, 2, TimeUnit.SECONDS)
+                    if(plugin.blacklistedPlayers.contains(e.player.uniqueId)) {
+                        plugin.bannedPlayers.remove(e.player.uniqueId)
+                    } else {
+                        e.player.sendMessage(PunishmentMessages(plugin).getPermBanMsg(docCheck.first().getString("reason")!!))
+                    }
+                }, 1300, TimeUnit.MILLISECONDS)
                 plugin.bannedPlayers.remove(e.player.uniqueId)
                 plugin.bannedPlayers.add(e.player.uniqueId)
             }
@@ -44,11 +49,11 @@ class BanListeners(val plugin: NeptuneCarbonBungee) : Listener {
             if(e.isCommand) {
                 if(!e.message.startsWith("/link", true)) {
                     e.isCancelled = true
-                    player.sendMessage(ChatUtil.translate("&cError: You cannot run this command while you are banned."))
+                    player.sendMessage(ChatUtil.translate("&cYou are not allowed to use commands as you are banned. The only command which you may run is /link."))
                 }
             } else {
                 e.isCancelled = true
-                player.sendMessage(ChatUtil.translate("&cError: You cannot use the chat while you are banned."))
+                player.sendMessage(ChatUtil.translate("&cYou are not allowed to send chat messages as you are banned."))
             }
         }
     }

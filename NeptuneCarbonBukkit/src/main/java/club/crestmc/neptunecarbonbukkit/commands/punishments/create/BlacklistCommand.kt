@@ -2,6 +2,7 @@ package club.crestmc.neptunecarbonbukkit.commands.punishments.create
 
 import club.crestmc.neptunecarbonbukkit.Constants
 import club.crestmc.neptunecarbonbukkit.NeptuneCarbonBukkit
+import club.crestmc.neptunecarbonbukkit.PunishmentMessages
 import club.crestmc.neptunecarbonbukkit.entities.UnknownPlayer
 import club.crestmc.neptunecarbonbukkit.utils.*
 import co.aikar.commands.BaseCommand
@@ -70,13 +71,13 @@ class BlacklistCommand : BaseCommand() {
         }
         PluginMessageUtil.sendData(
             "BungeeCord", "KickPlayer", targetArg, ChatUtil.translate(
-                Constants.getPermBlacklistMsg(reason, null)
+                PunishmentMessages(plugin).getPermBlacklistMsg(reason, null)
             )
         )
         for(alt: UnknownPlayer in PlayerUtils(plugin).getAlts(target)) {
             PluginMessageUtil.sendData(
                 "BungeeCord", "KickPlayer", alt.username, ChatUtil.translate(
-                    Constants.getPermBlacklistMsg(reason, target.username)
+                    PunishmentMessages(plugin).getPermBlacklistMsg(reason, target.username)
                 )
             )
         }

@@ -2,10 +2,12 @@ package club.crestmc.neptunecarbonbungee.listeners
 
 import club.crestmc.neptunecarbonbungee.Constants
 import club.crestmc.neptunecarbonbungee.NeptuneCarbonBungee
+import club.crestmc.neptunecarbonbungee.PunishmentMessages
 import club.crestmc.neptunecarbonbungee.utils.ChatUtil
 import com.mongodb.BasicDBObject
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Updates
 import net.md_5.bungee.api.connection.ProxiedPlayer
 import net.md_5.bungee.api.event.ChatEvent
 import net.md_5.bungee.api.event.LoginEvent
@@ -15,30 +17,58 @@ import net.md_5.bungee.api.event.PreLoginEvent
 import net.md_5.bungee.api.event.ServerConnectEvent
 import net.md_5.bungee.api.plugin.Listener
 import net.md_5.bungee.event.EventHandler
+import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
 
 class BlacklistListeners(val plugin: NeptuneCarbonBungee) : Listener {
     @EventHandler
     fun onJoin(e: PostLoginEvent) {
         val user = plugin.databaseManager.usersCollection.find(eq("uuid", e.player.uniqueId.toString())).first()
+
+        val ipCheck = plugin.databaseManager.punishmentsCollection.find(and(
+            eq("type", "blacklist"),
+            eq("uuid", e.player.uniqueId.toString()),
+            eq("active", true)
+        ))
+
+        if(ipCheck.first() != null) {
+            if(!((ipCheck.first().get("ips") as MutableList<String>).contains((e.player.socketAddress as InetSocketAddress).hostName))) {
+                plugin.logger.info("Not the same, just isnt the same")
+                val newArray = (ipCheck.first().get("ips") as MutableList<String>)
+                newArray.add((e.player.socketAddress as InetSocketAddress).hostName)
+                plugin.databaseManager.punishmentsCollection.updateOne(ipCheck.first(), Updates.combine(
+                    Updates.set("ips", newArray)
+                ))
+
+                e.player.disconnect(Constants.getPermBlacklistMsg(ipCheck.first().getString("reason"), null))
+                return
+            }
+        }
+
+        val ipsArray = (user.get("ips") as MutableList<String>)
+        if(!(ipsArray.contains((e.player.socketAddress as InetSocketAddress).hostName))) {
+            ipsArray.add((e.player.socketAddress as InetSocketAddress).hostName)
+        }
+
         val docCheck = plugin.databaseManager.punishmentsCollection.find(and(
             eq("type", "blacklist"),
-            eq("ips", BasicDBObject("\$in", user.get("ips") as MutableList<String>)),
+            eq("ips", BasicDBObject("\$in", ipsArray)),
             eq("active", true)
         ))
 
         if(docCheck.first() != null) {
             if(docCheck.first().getDate("expires") == null) {
                 plugin.proxy.scheduler.schedule(plugin, {
-                    e.player.sendMessage("\n${Constants.getPermBlacklistMsg(
+                    e.player.sendMessage(
+                        PunishmentMessages(plugin).getPermBlacklistMsg(
                         
                             docCheck.first().getString("reason")!!, 
                         
                             if(docCheck.first().getString("uuid") != e.player.uniqueId.toString()) plugin.databaseManager.usersCollection.find(eq("uuid", docCheck.first().getString("uuid"))).first().getString("username")
                             else null
                         
-                        )}\n${ChatUtil.translate("&f &f")}")
-                }, 2, TimeUnit.SECONDS)
+                        ))
+                }, 1, TimeUnit.SECONDS)
                 plugin.blacklistedPlayers.remove(e.player.uniqueId)
                 plugin.blacklistedPlayers.add(e.player.uniqueId)
             }
@@ -57,11 +87,11 @@ class BlacklistListeners(val plugin: NeptuneCarbonBungee) : Listener {
             if(e.isCommand) {
                 if(!e.message.startsWith("/link", true)) {
                     e.isCancelled = true
-                    player.sendMessage(ChatUtil.translate("&cError: You cannot run this command while you are blacklisted."))
+                    player.sendMessage(ChatUtil.translate("&cYou are not allowed to use commands as you are blacklisted. The only command which you may run is /link."))
                 }
             } else {
                 e.isCancelled = true
-                player.sendMessage(ChatUtil.translate("&cError: You cannot use the chat while you are blacklisted."))
+                player.sendMessage(ChatUtil.translate("&cYou are not allowed to send chat messages as you are blacklisted."))
             }
         }
     }

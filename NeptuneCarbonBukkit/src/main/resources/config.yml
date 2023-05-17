@@ -17,3 +17,9 @@ ranks:
   defaultRankPermissions:
     - 'rank.default'
     - 'default'
+
+# UNCOMMENT BTW
+#banAppealLink: 'appeal link here'
+#blacklistAppealLink: 'yeah'
+#unbanPurchaseLink: 'idfk'
+#unblacklistPurchaseLink: 'k'

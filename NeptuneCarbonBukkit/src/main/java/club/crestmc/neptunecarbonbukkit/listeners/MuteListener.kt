@@ -2,6 +2,7 @@ package club.crestmc.neptunecarbonbukkit.listeners
 
 import club.crestmc.neptunecarbonbukkit.Constants
 import club.crestmc.neptunecarbonbukkit.NeptuneCarbonBukkit
+import club.crestmc.neptunecarbonbukkit.PunishmentMessages
 import club.crestmc.neptunecarbonbukkit.utils.ChatUtil
 import com.mongodb.client.model.Filters.and
 import com.mongodb.client.model.Filters.eq
@@ -25,7 +26,7 @@ class MuteListener(val plugin: NeptuneCarbonBukkit) : Listener {
 
             if(doc.first().getDate("expires") == null) {
                 e.player.sendMessage(ChatUtil.translate(
-                    Constants.getPermMuteMsg(doc.first().getString("reason"))
+                    PunishmentMessages(plugin).getPermMuteMsg(doc.first().getString("reason"))
                 ))
             }
         }

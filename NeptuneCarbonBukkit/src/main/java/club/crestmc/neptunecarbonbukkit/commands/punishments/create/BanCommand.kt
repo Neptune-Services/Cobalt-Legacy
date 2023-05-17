@@ -2,6 +2,7 @@ package club.crestmc.neptunecarbonbukkit.commands.punishments.create
 
 import club.crestmc.neptunecarbonbukkit.Constants
 import club.crestmc.neptunecarbonbukkit.NeptuneCarbonBukkit
+import club.crestmc.neptunecarbonbukkit.PunishmentMessages
 import club.crestmc.neptunecarbonbukkit.utils.*
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.CommandIssuer
@@ -76,7 +77,7 @@ class BanCommand : BaseCommand() {
         }
         PluginMessageUtil.sendData(
             "BungeeCord", "KickPlayer", target.username, ChatUtil.translate(
-                Constants.getPermBanMsg(reason)
+                PunishmentMessages(plugin).getPermBanMsg(reason)
             )
         )
         val toSave = Document()

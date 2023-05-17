@@ -14,3 +14,9 @@ motd:
   - '&3&lUNDER DEVELOPMENT!'
 
 whitelisted: false
+
+# UNCOMMENT BTW
+#banAppealLink: 'appeal link here'
+#blacklistAppealLink: 'yeah'
+#unbanPurchaseLink: 'idfk'
+#unblacklistPurchaseLink: 'k'
