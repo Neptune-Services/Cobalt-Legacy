@@ -81,6 +81,7 @@ class NeptuneCarbonBukkit : JavaPlugin() {
 
         server.pluginManager.registerEvents(UpdateServerListeners(this), this)
         server.pluginManager.registerEvents(LuckpermsHider(this), this)
+        server.pluginManager.registerEvents(BanEvasionListener(this), this)
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, Runnable {
             this.logger.info(ChatUtil.translate("&eSuccessfully loaded &dCarbon Bukkit &elicensed under &d" + Constants.serverName + "&e. If this plugin is being used on a server that is not &d" + Constants.serverName + "&e, please contact &d" + Constants.instanceSupervisor + " &eimmediately."))

@@ -48,7 +48,7 @@ class BlacklistCommand : BaseCommand() {
             return
         }
 
-        val existsCheck = plugin.databaseManager.punishmentsCollection.find(and(eq("uuid", target.uuid.toString()), eq("active", true), eq("type", "ban")))
+        val existsCheck = plugin.databaseManager.punishmentsCollection.find(and(eq("uuid", target.uuid.toString()), eq("active", true), eq("type", "blacklist")))
         if(existsCheck.first() != null) {
             sender.sendMessage(ChatUtil.translate("&cThat user is already blacklisted."))
             return

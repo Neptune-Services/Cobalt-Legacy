@@ -42,4 +42,21 @@ class PlayerUtils(val plugin: NeptuneCarbonBukkit) {
                 "&7${it.username}"
         }
     }
+
+    fun getBanEvasion(altsList: List<UnknownPlayer>, exclude: UnknownPlayer): String? {
+        val docs = plugin.databaseManager.punishmentsCollection.find(eq("active", true)).filter(eq("active", true))
+
+        var username: String? = null
+
+        for(it: UnknownPlayer in altsList) {
+            if(it != exclude) {
+                if(docs.filter(and(eq("type", "blacklist"), eq("active", true), eq("uuid", it.uuid.toString()))).first() == null) {
+                    if(docs.filter(and(eq("type", "ban"), eq("active", true), eq("uuid", it.uuid.toString()))).first() != null)
+                        username = it.username
+                }
+            }
+        }
+
+        return username
+    }
 }
